@@ -1,7 +1,14 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+
+morgan.token('body', (request) => {
+  return JSON.stringify(request.body);
+})
+const format = ':method :url :status :res[content-length] - :response-time ms :body'
+app.use(morgan(format));
 
 let persons = [
   { 
@@ -24,7 +31,7 @@ let persons = [
     name: "Mary Poppendieck", 
     number: "39-23-6423122"
   }
-];
+]
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
@@ -88,6 +95,7 @@ app.post('/api/persons', (request, response) => {
 
   response.json(person)
 })
+
 
 const PORT = 3001
 app.listen(PORT)
